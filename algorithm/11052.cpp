@@ -31,7 +31,6 @@ int main(int argc, const char * argv[]) {
     
     
     maxPrice[0]=0;
-    maxPrice[1]=1;
     for(int i=1; i<=N; i++) {
         for(int j=1; j<=i; j++) {
             maxPrice[i] = max(maxPrice[i],maxPrice[i-j] + price[j]);
