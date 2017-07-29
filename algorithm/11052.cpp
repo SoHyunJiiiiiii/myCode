@@ -8,30 +8,36 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
-vector<int> price;
-int FindMax(int n) {
-    if(n==0) {
-        return 0;
-    }
-    int q = -9999;
-    for(int i=1; i<=n; i++) {
-        q = max(q,price[i]+FindMax(n-i));
 
-    }
-    return q;
-}
 int main(int argc, const char * argv[]) {
     // insert code here...
     int N;
-
     scanf("%d",&N);
     
-    price.resize(N);
+    vector<int> price;
+    vector<int> maxPrice;
+
+    price.resize(N+1);
+    maxPrice.resize(N+1);
     for(int i=1; i<=N; i++) {
         scanf("%d",&price[i]);
     }
     
-    printf("%d\n", FindMax(N));
+    if(N==0) {
+        return 0;
+    }
+    
+    
+    maxPrice[0]=0;
+    maxPrice[1]=1;
+    for(int i=1; i<=N; i++) {
+        for(int j=1; j<=i; j++) {
+            maxPrice[i] = max(maxPrice[i],maxPrice[i-j] + price[j]);
+        }
+    }
+    
+    printf("%d\n", maxPrice[N]);
     return 0;
 }
