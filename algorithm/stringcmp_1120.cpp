@@ -71,7 +71,7 @@ int main(int argc, const char * argv[]) {
         if(CountDiffBackChar()>CountDiffFrontChar()) {
             cout << CountDiffFrontChar() << '\n';
         } else {
-            cout << CountDiffFrontChar() << '\n';
+            cout << CountDiffBackChar() << '\n';
         }
     }
     
