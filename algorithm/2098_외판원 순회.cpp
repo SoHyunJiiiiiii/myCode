@@ -6,59 +6,45 @@
 //  Copyright © 2017년 지소현. All rights reserved.
 //
 
-#include <stdio.h>
-#include <algorithm>
+
+#include <cstdio>
 #include <vector>
+#include <algorithm>
 using namespace std;
-int main() {
-    // insert code here...
-    
-    int num,MIN=999;
-    scanf("%d",&num);
-    
-    vector<int> d;
-    d.resize(num);
-    for(int i=0; i<num; i++) {
-        d[i] = i+1;
-    }
-    
-    //비용
-    int w[num+1][num+1];
-    for(int i=1; i<=num; i++) {
-        for(int j=1; j<=num; j++) {
-            scanf("%d",&w[i][j]);
+int a[20][20];
+int main(){
+    int n;
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%d",&a[i][j]);
         }
     }
     
-    int sum=0;
-//    for(int i=1; i<=num; i++) {
-//        int min = 9999;
-//        for(int j=1; j<=num; j++) {
-//            if(min > w[i][j] && i!=j) {
-//                min = w[i][j];
-//            }
-//        }
-//        sum += min;
-//    }
-    do{
-        if(d[0]!=1) break;
-        sum=0;
+    vector<int> d(n);
+    for (int i=0; i<n; i++) {
+        d[i] = i;
+    }
+    
+    int ans=2147483647;
+    
+    do {
         bool ok = true;
-        for(int i=0; i<num-1; i++) {
-            if(w[d[i]][d[i+1]]==0){
-                ok=false;
-                break;
+        int sum = 0;
+        for (int i=0; i<n-1; i++) {
+            if (a[d[i]][d[i+1]] == 0) {
+                ok = false;
             } else {
-                sum += w[d[i]][d[i+1]];
+                sum += a[d[i]][d[i+1]];
             }
         }
-        
-        if(ok && w[d[num-1]][d[0]]!=0){
-            sum += w[d[num-1]][d[0]];
-            MIN = min(MIN, sum);
+        if (ok && a[d[n-1]][d[0]] != 0) {
+            sum += a[d[n-1]][d[0]];
+            if (ans > sum) ans = sum;
         }
-    }while(next_permutation(d.begin(),d.end()));
+    } while (next_permutation(d.begin()+1, d.end()));
     
-    printf("%d\n",MIN);
+    printf("%d\n",ans);
     return 0;
+
 }
