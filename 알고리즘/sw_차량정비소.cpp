@@ -4,7 +4,7 @@
 //
 //  Created by 지소현 on 2017. 10. 1..
 //  Copyright © 2017년 지소현. All rights reserved.
-//  46개 맞았음..
+//  PASS!
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -22,13 +22,11 @@ bool sortCustomer(receipt_info st1, receipt_info st2) {
     return st1.customer < st2.customer;
 }
 bool sortFinish (receipt_info st1, receipt_info st2) {
-    return st1.finishTime < st2.finishTime;
-}
-bool sortPriorNum (receipt_info st1, receipt_info st2) {
     if(st1.finishTime==st2.finishTime)
         return st1.prior_num < st2.prior_num;
     return st1.finishTime < st2.finishTime;
 }
+
 
 int main() {
     //접수 창구의 개수 N, 정비 창구의 개수 M, 차량 정비소를 방문한 고객의 수 K,
@@ -59,11 +57,12 @@ int main() {
         
         int sum=0;
         int i=1;    //현재 처리중인 고객번호
-        bool exitflag = false;
+        int endCNT = 0;
+        int currentTime = 0;
         vector<receipt_info> finishA,finishB;    //a창구,b창구에 접수한 고객들과 끝나는 시간들
         vector<receipt_info> waita,waitb;   //a,b창구 기다리는 사람들
         
-        for(int currentTime=0; ; currentTime++) {
+        while(endCNT != K) {
             
             //a창구에 기다리는 사람들을 queue에 넣어줌
             for(int j=i; j<=K ;j++) {
@@ -87,7 +86,6 @@ int main() {
                 
                 waitb.push_back(receipt_info(0,goA,finish,cus));
                 finishA.erase(finishA.begin());
-                //cout << currentTime << "분 일 때 "<<finishA[0].customer<< "나가서 " << goA << " 비워둠 \n" ;
             }
             
             //finishB에 끝나는 시간과 현재시간(currentTime)이 같으면
@@ -101,10 +99,9 @@ int main() {
                 }
                 
                 int goB = finishB[0].num;
-                if(finishB[0].customer == K)    exitflag=true;
                 b_.push_back(goB);
                 finishB.erase(finishB.begin());
-                //cout << currentTime <<"분 일때 ***** ("<< finishB[0].prior_num << "=>" << finishB[0].num << ") : "  << finishB[0].customer << "번 고객이 끝나는 시간은 "<< finishB[0].finishTime << "pop" << endl;
+                endCNT++;
             }
             
             
@@ -117,7 +114,6 @@ int main() {
                 int waitedCus = waita[0].customer;   waita.erase(waita.begin());
                 finishA.push_back(receipt_info( goA,0,a[goA]+currentTime,waitedCus));
                 sort(finishA.begin(),finishA.end(),sortFinish);
-                //cout << currentTime << "분 일 때 " << waitedCus << "고객 "<< goA << "번 창구 " << a[goA]+currentTime<< " push \n" ;
             }
             
             //비어있는 정비창구(goB)가 있다면 .. waitb에 있는 대기자를 비어있는 정비창구(b_)로부터 goB를 꺼내와서 보냄
@@ -128,16 +124,14 @@ int main() {
                 // 접수 창구에서 동시에 접수를 완료하고 정비 창구로 이동한 경우, 이전 접수 창구번호가 낮은 순서대로
                 // 동시 완료 아닐 시에는 finishTime 기준으로 오름차순 정렬
                 sort(waitb.begin(),waitb.end(),sortFinish);
-                sort(waitb.begin(),waitb.end(),sortPriorNum);
                 
                 int waitedCus = waitb[0].customer;
                 int goA = waitb[0].prior_num;
                 waitb.erase(waitb.begin());
                 finishB.push_back(receipt_info(goB, goA, b[goB]+currentTime, waitedCus));
                 sort(finishB.begin(),finishB.end(),sortFinish);
-                //cout << waitedCus << " 고객을 " << goB << "b로 보냄.." <<b[goB]+currentTime <<"에ㄱ ㄱ끝남" <<endl;
             }
-            if(exitflag)    break;
+            currentTime++;
         }
         if(sum==0)  cout << "#" << z <<" -1\n";
         else    cout << "#" << z << " " << sum << "\n";
